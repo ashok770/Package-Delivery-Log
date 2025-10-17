@@ -1,6 +1,7 @@
 package com.campusmailroom.deliverylog.service;
 
 import com.campusmailroom.deliverylog.model.User;
+import com.campusmailroom.deliverylog.model.UserDropdownDto; // NEW IMPORT
 import java.util.List;
 
 public interface UserService {
@@ -14,6 +15,9 @@ public interface UserService {
     // 3. Find a user by their unique email (useful for login/check)
     User getUserByEmail(String email);
 
-    // 4. Get all users
+    // 4. Get all users (Original method, but often unused due to security concerns)
     List<User> getAllUsers();
+
+    // 5. NEW METHOD: Get safe DTOs for the recipient dropdown list
+    List<UserDropdownDto> getAllRecipientsForDropdown();
 }

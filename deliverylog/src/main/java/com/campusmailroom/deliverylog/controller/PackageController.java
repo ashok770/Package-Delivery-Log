@@ -2,38 +2,66 @@ package com.campusmailroom.deliverylog.controller;
 
 import com.campusmailroom.deliverylog.model.Package;
 import com.campusmailroom.deliverylog.model.PackageLog;
+import com.campusmailroom.deliverylog.model.User; // ADDED: Required for setting Sender/Receiver
 import com.campusmailroom.deliverylog.service.PackageService;
+import com.campusmailroom.deliverylog.service.UserService; // ADDED: Required for looking up User objects
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal; // ADDED: Required for handling weight
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/packages") // Base URL: /api/packages
+@RequestMapping("/api/packages")
 public class PackageController {
 
     private final PackageService packageService;
+    private final UserService userService; // ADDED: Inject UserService to fetch User objects
 
     @Autowired
-    public PackageController(PackageService packageService) {
+    public PackageController(PackageService packageService, UserService userService) {
         this.packageService = packageService;
+        this.userService = userService;
     }
 
     // Endpoint 1: Log a New Package (CREATE)
-    // Maps to: POST /api/packages?staffId={id}
+    // FIX: Changed from @RequestBody to @RequestParam to accept HTML form data
     @PostMapping
     public ResponseEntity<Package> logPackage(
-            @RequestBody Package pkg,
-            @RequestParam Long staffId) { // Mailroom staff ID is passed as a query parameter
+            @RequestParam String description,
+            @RequestParam(required = false) Double weight,
+            @RequestParam(required = false) String expectedDelivery, // Accepted as String from form
+            @RequestParam(name = "receiver.userId") Long recipientId, // Gets the selected user ID
+            @RequestParam Long staffId) {
 
-        Package savedPackage = packageService.logNewPackage(pkg, staffId);
+        // 1. Manually build the Package object from request parameters
+        Package newPkg = new Package();
+        newPkg.setDescription(description);
+
+        // Handle optional weight field conversion
+        if (weight != null) {
+            newPkg.setWeight(BigDecimal.valueOf(weight));
+        }
+
+        // 2. Set the User FKs using IDs fetched by the service layer
+        User recipient = userService.getUserById(recipientId);
+        User sender = userService.getUserById(staffId); // Using staff as placeholder sender ID
+
+        newPkg.setReceiver(recipient);
+        newPkg.setSender(sender);
+
+        // Note: Skipping complex Date parsing from String for simplicity (optional field)
+
+        // 3. Log the package via the service (this also sets status to 'Received')
+        Package savedPackage = packageService.logNewPackage(newPkg, staffId);
+
         return new ResponseEntity<>(savedPackage, HttpStatus.CREATED);
     }
 
     // Endpoint 2: Get Package Details by ID (READ)
-    // Maps to: GET /api/packages/{id}
+    // ... (This endpoint remains the same)
     @GetMapping("/{id}")
     public ResponseEntity<Package> getPackageById(@PathVariable Long id) {
         try {
@@ -45,7 +73,7 @@ public class PackageController {
     }
 
     // Endpoint 3: Get Packages by Recipient ID (READ for user/staff view)
-    // Maps to: GET /api/packages/user/{id}
+    // ... (This endpoint remains the same)
     @GetMapping("/user/{recipientId}")
     public ResponseEntity<List<Package>> getPackagesForRecipient(@PathVariable Long recipientId) {
         List<Package> packages = packageService.getPackagesByRecipientId(recipientId);
@@ -53,7 +81,7 @@ public class PackageController {
     }
 
     // Endpoint 4: Update Package Status (UPDATE - Mark as Picked Up)
-    // Maps to: POST /api/packages/{id}/status?staffId={id}&status={newStatus}
+    // ... (This endpoint remains the same)
     @PostMapping("/{packageId}/status")
     public ResponseEntity<Package> updateStatus(
             @PathVariable Long packageId,
@@ -70,7 +98,7 @@ public class PackageController {
     }
 
     // Endpoint 5: Get Package History/Log (READ)
-    // Maps to: GET /api/packages/{id}/logs
+    // ... (This endpoint remains the same)
     @GetMapping("/{packageId}/logs")
     public ResponseEntity<List<PackageLog>> getPackageHistory(@PathVariable Long packageId) {
         List<PackageLog> logs = packageService.getPackageHistory(packageId);

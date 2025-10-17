@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mailroom Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; color: #555; }
+        .status-received { color: orange; font-weight: bold; }
+        .status-picked { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+<h2>Campus Mailroom: Pending Packages</h2>
+
+<p>Total Packages Found: <span th:text="${#lists.size(packages)}">0</span></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Description</th>
+        <th>Recipient (ID)</th>
+        <th>Received At</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="pkg : ${packages}">
+        <td th:text="${pkg.packageId}">1</td>
+        <td th:text="${pkg.description}">Amazon Box</td>
+        <td th:text="${pkg.receiver.userId}">2</td>
+        <td th:text="${#dates.format(pkg.receivedAt, 'dd-MMM-yyyy HH:mm')}">17-Oct-2025</td>
+
+        <td th:classappend="${pkg.status == 'Received' ? 'status-received' : 'status-picked'}" th:text="${pkg.status}">Received</td>
+
+        <td>
+            <a th:if="${pkg.status == 'Received'}"
+               th:href="@{'/api/packages/' + ${pkg.packageId} + '/status?staffId=1&status=Picked%20Up'}">
+                Mark as Picked Up
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

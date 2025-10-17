@@ -60,23 +60,20 @@ public class PackageServiceImpl implements PackageService {
         return packageRepository.findByReceiverUserId(recipientId);
     }
 
-    // --- 4. Update Package Status (FIXED IMPLEMENTATION) ---
+    // --- 4. Update Package Status (The 'Mark as Picked Up' Action) ---
     @Override
     public Package updatePackageStatus(Long packageId, String newStatus, Long staffId) {
         Package pkg = getPackageById(packageId);
         User staff = userService.getUserById(staffId);
 
-        // 1. Update the Package status
         pkg.setStatus(newStatus);
 
-        // If status is 'Picked Up', record the actual pickup time
         if (newStatus.equalsIgnoreCase("Picked Up")) {
-            pkg.setPickupDate(new Date()); // <-- UPDATED LINE: Using the dedicated pickupDate field
+            pkg.setPickupDate(new Date());
         }
 
         Package updatedPackage = packageRepository.save(pkg);
 
-        // 2. Create the audit log entry
         PackageLog log = new PackageLog();
         log.setPkg(updatedPackage);
         log.setUpdatedBy(staff);
@@ -91,5 +88,12 @@ public class PackageServiceImpl implements PackageService {
     @Override
     public List<PackageLog> getPackageHistory(Long packageId) {
         return packageLogRepository.findByPkgPackageIdOrderByTimestampAsc(packageId);
+    }
+
+    // --- 6. Get All Packages (NEW METHOD FOR DASHBOARD) ---
+    @Override
+    public List<Package> getAllPackages() {
+        // FindAll fetches all records, which is fine for our simple dashboard list.
+        return packageRepository.findAll();
     }
 }

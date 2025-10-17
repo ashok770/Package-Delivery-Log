@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Log New Package</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h2>Log New Package Entry</h2>
+<p><a href="/dashboard">← Back to Dashboard</a></p>
+
+<form th:action="@{/api/packages}" method="post">
+
+    <input type="hidden" name="staffId" th:value="${staffId}" />
+
+    <div class="form-group">
+        <label for="description">Package Description / Tracking</label>
+        <input type="text" id="description" name="description" placeholder="e.g., FedEx Envelope, Amazon Box 1Z-555" required>
+    </div>
+
+    <div class="form-group">
+        <label for="weight">Weight (kg) (Optional)</label>
+        <input type="number" id="weight" name="weight" step="0.01">
+    </div>
+
+    <div class="form-group">
+        <label for="expectedDelivery">Expected Delivery/Pickup Date (Optional)</label>
+        <input type="text" id="expectedDelivery" name="expectedDelivery" placeholder="YYYY-MM-DDT12:00:00 (Optional)">
+    </div>
+
+    <div class="form-group">
+        <label for="recipient">Recipient (Student/Staff)</label>
+        <select id="recipient" name="receiver.userId" required>
+            <option value="">-- Select Recipient --</option>
+
+            <option th:each="user : ${recipients}"
+                    th:value="${user.id}"
+                    th:text="${user.name} + ' (' + ${user.email} + ')'">
+                Ashok Tamata (ashok.tamata@student.edu)
+            </option>
+        </select>
+    </div>
+
+    <button type="submit">Log Package</button>
+</form>
+</body>
+</html>

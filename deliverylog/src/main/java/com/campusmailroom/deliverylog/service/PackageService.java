@@ -20,4 +20,7 @@ public interface PackageService {
 
     // 5. Get the history/log for a specific package
     List<PackageLog> getPackageHistory(Long packageId);
+
+    // 6. Get all packages (REQUIRED FOR DASHBOARD)
+    List<Package> getAllPackages();
 }
