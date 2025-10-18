@@ -2,50 +2,58 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mailroom Dashboard</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h2 { color: #333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; color: #555; }
-        .status-received { color: orange; font-weight: bold; }
-        .status-picked { color: green; font-weight: bold; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mailroom Dashboard - Pending Pickups</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/style.css}" rel="stylesheet">
 </head>
 <body>
-<h2>Campus Mailroom: Pending Packages</h2>
+<div th:insert="~{fragments/_header :: navbar}"></div> <main class="container">
+    <h2 class="mb-4 text-secondary">Campus Mailroom: Pending Packages 📦</h2>
 
-<p>Total Packages Found: <span th:text="${#lists.size(packages)}">0</span></p>
+    <div th:if="${param.status == 'pickedup'}" class="alert alert-success alert-dismissible fade show" role="alert">
+        Package successfully marked as Picked Up!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Description</th>
-        <th>Recipient (ID)</th>
-        <th>Received At</th>
-        <th>Status</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="pkg : ${packages}">
-        <td th:text="${pkg.packageId}">1</td>
-        <td th:text="${pkg.description}">Amazon Box</td>
-        <td th:text="${pkg.receiver.userId}">2</td>
-        <td th:text="${#dates.format(pkg.receivedAt, 'dd-MMM-yyyy HH:mm')}">17-Oct-2025</td>
+    <div class="alert alert-info">
+        Total Packages Pending Pickup: <span th:text="${#lists.size(packages)}" class="fw-bold">0</span>
+    </div>
 
-        <td th:classappend="${pkg.status == 'Received' ? 'status-received' : 'status-picked'}" th:text="${pkg.status}">Received</td>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Recipient (ID)</th>
+                <th>Received At</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pkg : ${packages}">
+                <td th:text="${pkg.packageId}">1</td>
+                <td th:text="${pkg.description}">Amazon Box</td>
+                <td th:text="${pkg.receiver.userId}">2</td>
+                <td th:text="${#dates.format(pkg.receivedAt, 'dd-MMM-yyyy HH:mm')}">17-Oct-2025</td>
+                <td><span class="badge text-bg-warning" th:text="${pkg.status}">Received</span></td>
+                <td>
+                    <a th:href="@{'/search?packageId=' + ${pkg.packageId}}"
+                       class="btn btn-sm btn-success">
+                        Process Pickup
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-        <td>
-            <a th:if="${pkg.status == 'Received'}"
-               th:href="@{'/api/packages/' + ${pkg.packageId} + '/status?staffId=1&status=Picked%20Up'}">
-                Mark as Picked Up
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-</body>
+    <div th:if="${#lists.isEmpty(packages)}" class="alert alert-light text-center">
+        🎉 Great Job! No packages are currently awaiting pickup.
+    </div>
+</main>
+
+<div th:insert="~{fragments/_footer :: footer}"></div> </body>
 </html>
