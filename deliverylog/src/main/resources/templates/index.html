@@ -11,8 +11,7 @@
 <body>
 <div th:insert="~{fragments/_header :: navbar}"></div>
 
-<main class="main-content">
-
+<main class="container">
     <div class="hero-section text-start d-flex align-items-center">
 
         <div class="container py-5">
@@ -49,23 +48,23 @@
                 </a>
             </div>
             <div class="col-md-4">
+                <a href="/api-docs" class="text-decoration-none card p-4 h-100 shadow-sm border-0 transition-300">
+                    <i class="fas fa-code fa-3x mb-3 text-secondary"></i>
+                    <h5 class="fw-bold m-0">API Access</h5>
+                    <p class="text-muted mt-2">View integration docs.</p>
+                </a>
+            </div>
+            <div class="col-md-4">
                 <a href="/reports" class="text-decoration-none card p-4 h-100 shadow-sm border-0 transition-300">
                     <i class="fas fa-chart-bar fa-3x mb-3 text-success"></i>
                     <h5 class="fw-bold m-0">View Reports</h5>
                     <p class="text-muted mt-2">Analytics & history summary.</p>
                 </a>
             </div>
-            <div class="col-md-4">
-                <a href="/api/users" class="text-decoration-none card p-4 h-100 shadow-sm border-0 transition-300">
-                    <i class="fas fa-code fa-3x mb-3 text-secondary"></i>
-                    <h5 class="fw-bold m-0">API Access</h5>
-                    <p class="text-muted mt-2">Integrate your systems.</p>
-                </a>
-            </div>
         </div>
     </div>
 </main>
 
-<div th:insert="fragments/_footer :: footer"></div>
+<div th:insert="~{fragments/_footer :: footer}"></div>
 </body>
 </html>

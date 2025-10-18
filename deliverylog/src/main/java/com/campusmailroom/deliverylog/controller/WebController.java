@@ -138,4 +138,15 @@ public class WebController {
             return "redirect:/package/new?error=true";
         }
     }
+
+    // Inside WebController.java
+
+// ... existing code ...
+
+    // --- NEW ENDPOINT: API Documentation View ---
+// Maps to: GET http://localhost:8080/api-docs
+    @GetMapping("/api-docs")
+    public String showApiDocs() {
+        return "api_docs"; // Renders api_docs.html
+    }
 }
