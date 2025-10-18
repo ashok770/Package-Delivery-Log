@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map; // NEW IMPORT
+import java.util.HashMap; // NEW IMPORT
 
 @Service
 public class PackageServiceImpl implements PackageService {
@@ -90,10 +92,28 @@ public class PackageServiceImpl implements PackageService {
         return packageLogRepository.findByPkgPackageIdOrderByTimestampAsc(packageId);
     }
 
-    // --- 6. Get All Packages (NEW METHOD FOR DASHBOARD) ---
+    // --- 6. Get All Packages (FOR DASHBOARD) ---
     @Override
     public List<Package> getAllPackages() {
-        // FindAll fetches all records, which is fine for our simple dashboard list.
         return packageRepository.findAll();
+    }
+
+    // --- 7. NEW METHOD: Get Status Summary for Reporting ---
+    @Override
+    public Map<String, Long> getPackageStatusSummary() {
+        // 1. Get the list of [status, count] pairs from the repository
+        List<Object[]> statusCounts = packageRepository.countPackagesByStatus();
+
+        // 2. Map the results into a HashMap for easy consumption
+        Map<String, Long> summary = new HashMap<>();
+
+        for (Object[] result : statusCounts) {
+            String status = (String) result[0];
+            // The count comes as a Long object
+            Long count = (Long) result[1];
+            summary.put(status, count);
+        }
+
+        return summary;
     }
 }

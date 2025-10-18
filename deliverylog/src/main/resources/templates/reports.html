@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>System Reports</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #2c3e50; }
+        table { width: 400px; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #ecf0f1; }
+        .status-received { color: orange; }
+        .status-picked { color: green; }
+    </style>
+</head>
+<body>
+<h2>Package Status Summary Report 📈</h2>
+<p><a href="/">← Back to Home</a></p>
+
+<table id="reportTable">
+    <thead>
+    <tr>
+        <th>Package Status</th>
+        <th>Count</th>
+    </tr>
+    </thead>
+    <tbody id="reportBody">
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function() {
+        // Use jQuery to fetch data from your working API endpoint
+        $.get("/api/reports/status-summary", function(data) {
+            let tbody = $('#reportBody');
+
+            // Loop through the map data: {"Status": Count}
+            $.each(data, function(status, count) {
+                let row = $('<tr></tr>');
+                let statusClass = status === 'Received' ? 'status-received' : 'status-picked';
+
+                row.append($('<td class="' + statusClass + '"></td>').text(status));
+                row.append($('<td></td>').text(count));
+                tbody.append(row);
+            });
+        }).fail(function() {
+            $('#reportBody').append('<tr><td colspan="2" style="color:red;">Error fetching report data.</td></tr>');
+        });
+    });
+</script>
+</body>
+</html>

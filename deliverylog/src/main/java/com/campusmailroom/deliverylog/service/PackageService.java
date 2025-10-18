@@ -3,6 +3,7 @@ package com.campusmailroom.deliverylog.service;
 import com.campusmailroom.deliverylog.model.Package;
 import com.campusmailroom.deliverylog.model.PackageLog;
 import java.util.List;
+import java.util.Map; // NEW IMPORT for Map
 
 public interface PackageService {
 
@@ -23,4 +24,7 @@ public interface PackageService {
 
     // 6. Get all packages (REQUIRED FOR DASHBOARD)
     List<Package> getAllPackages();
+
+    // 7. NEW METHOD: Get status summary for reporting (Status -> Count)
+    Map<String, Long> getPackageStatusSummary();
 }
