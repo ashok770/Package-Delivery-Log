@@ -8,10 +8,12 @@
     <link th:href="@{/style.css}" rel="stylesheet">
 </head>
 <body>
-<div th:insert="~{fragments/_header :: navbar}"></div> <main class="container">
+<div th:insert="~{fragments/_header :: navbar}"></div>
+
+<main class="container">
     <h2 class="mb-4 text-success">Log New Package Entry 📦</h2>
 
-    <form th:action="@{/api/packages}" method="post">
+    <form th:action="@{/package/log}" method="post">
 
         <input type="hidden" name="staffId" th:value="${staffId}" />
 
@@ -46,5 +48,6 @@
     </form>
 </main>
 
-<div th:insert="~{fragments/_footer :: footer}"></div> </body>
+<div th:insert="~{fragments/_footer :: footer}"></div>
+</body>
 </html>

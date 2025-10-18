@@ -8,8 +8,15 @@
     <link th:href="@{/style.css}" rel="stylesheet">
 </head>
 <body>
-<div th:insert="~{fragments/_header :: navbar}"></div> <main class="container">
+<div th:insert="~{fragments/_header :: navbar}"></div>
+
+<div class="container mt-4">
     <h2 class="mb-4 text-secondary">Campus Mailroom: Pending Packages 📦</h2>
+
+    <div th:if="${param.success == 'log'}" class="alert alert-success alert-dismissible fade show" role="alert">
+        Package successfully logged and is ready for pickup!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
     <div th:if="${param.status == 'pickedup'}" class="alert alert-success alert-dismissible fade show" role="alert">
         Package successfully marked as Picked Up!
@@ -53,7 +60,8 @@
     <div th:if="${#lists.isEmpty(packages)}" class="alert alert-light text-center">
         🎉 Great Job! No packages are currently awaiting pickup.
     </div>
-</main>
+</div>
 
-<div th:insert="~{fragments/_footer :: footer}"></div> </body>
+<div th:insert="~{fragments/_footer :: footer}"></div>
+</body>
 </html>

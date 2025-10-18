@@ -95,4 +95,47 @@ public class WebController {
             return "redirect:/search?error=true&packageId=" + packageId;
         }
     }
+
+    // Inside WebController.java
+
+// ... existing code ...
+
+    // --- NEW ENDPOINT: Handle Form Submission (POST) ---
+// This handles the data submitted from new_package.html
+    @PostMapping("/package/log")
+    public String handleNewPackageSubmission(
+            @RequestParam String description,
+            @RequestParam(required = false) Double weight,
+            @RequestParam(required = false) String expectedDelivery,
+            @RequestParam(name = "receiver.userId") Long recipientId,
+            @RequestParam Long staffId) {
+
+        try {
+            // 1. Manually build the Package object from request parameters
+            Package newPkg = new Package();
+            newPkg.setDescription(description);
+
+            if (weight != null) {
+                newPkg.setWeight(java.math.BigDecimal.valueOf(weight));
+            }
+            // NOTE: Date/Time parsing is complex, skipping for simplicity as before.
+
+            // 2. Set the User FKs using IDs fetched by the service layer
+            User recipient = userService.getUserById(recipientId);
+            User sender = userService.getUserById(staffId);
+
+            newPkg.setReceiver(recipient);
+            newPkg.setSender(sender);
+
+            // 3. Log the package via the service
+            packageService.logNewPackage(newPkg, staffId);
+
+            // 4. Redirect to Dashboard with a success flag
+            return "redirect:/dashboard?success=log";
+
+        } catch (RuntimeException e) {
+            // Redirect back to form with an error flag
+            return "redirect:/package/new?error=true";
+        }
+    }
 }
