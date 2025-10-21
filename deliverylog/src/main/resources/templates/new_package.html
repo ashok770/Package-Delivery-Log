@@ -3,50 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Log New Package</title>
+    <title>Log New Package - Campus Mailroom</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/style.css}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 <div th:insert="~{fragments/_header :: navbar}"></div>
 
-<main class="container">
-    <h2 class="mb-4 text-success">Log New Package Entry 📦</h2>
+<div class="container-fluid bg-light" style="min-height: 100vh;">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-6">
+                <!-- Enhanced Header -->
+                <div class="text-center mb-5">
+                    <div class="d-inline-flex align-items-center justify-content-center mb-3">
+                        <div class="bg-success rounded-circle p-3 me-3">
+                            <i class="fas fa-box-open fa-2x text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="h2 fw-bold text-gradient mb-0">Log New Package</h1>
+                            <p class="text-muted mb-0">Enter package details for tracking</p>
+                        </div>
+                    </div>
+                </div>
 
-    <form th:action="@{/package/log}" method="post">
+                <!-- Enhanced Form Card -->
+                <div class="card border-0 shadow-lg">
+                    <div class="card-header bg-white border-0 py-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clipboard-list fa-2x text-primary me-3"></i>
+                            <div>
+                                <h3 class="fw-bold mb-1">Package Information</h3>
+                                <p class="text-muted mb-0">Fill in the details below to log a new package</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/package/log}" method="post" class="needs-validation" novalidate>
+                            <input type="hidden" name="staffId" th:value="${staffId}" />
 
-        <input type="hidden" name="staffId" th:value="${staffId}" />
+                            <!-- Package Description -->
+                            <div class="mb-4">
+                                <label for="description" class="form-label fw-bold">
+                                    <i class="fas fa-tag me-2 text-primary"></i>
+                                    Package Description / Tracking Number
+                                </label>
+                                <input type="text" 
+                                       id="description" 
+                                       name="description" 
+                                       class="form-control form-control-lg" 
+                                       placeholder="e.g., FedEx Envelope, Amazon Box 1Z-555" 
+                                       required>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Enter a detailed description or tracking number for easy identification
+                                </div>
+                            </div>
 
-        <div class="mb-3">
-            <label for="description" class="form-label">Package Description / Tracking</label>
-            <input type="text" id="description" name="description" class="form-control" placeholder="e.g., FedEx Envelope, Amazon Box 1Z-555" required>
+                            <!-- Weight -->
+                            <div class="mb-4">
+                                <label for="weight" class="form-label fw-bold">
+                                    <i class="fas fa-weight me-2 text-primary"></i>
+                                    Weight (kg)
+                                    <span class="text-muted small">(Optional)</span>
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" 
+                                           id="weight" 
+                                           name="weight" 
+                                           step="0.01" 
+                                           class="form-control form-control-lg" 
+                                           placeholder="e.g., 2.5">
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Approximate weight for logistics purposes
+                                </div>
+                            </div>
+
+                            <!-- Expected Delivery Date -->
+                            <div class="mb-4">
+                                <label for="expectedDelivery" class="form-label fw-bold">
+                                    <i class="fas fa-calendar me-2 text-primary"></i>
+                                    Expected Delivery/Pickup Date
+                                    <span class="text-muted small">(Optional)</span>
+                                </label>
+                                <input type="datetime-local" 
+                                       id="expectedDelivery" 
+                                       name="expectedDelivery" 
+                                       class="form-control form-control-lg">
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    When is this package expected to be picked up?
+                                </div>
+                            </div>
+
+                            <!-- Recipient Selection -->
+                            <div class="mb-4">
+                                <label for="recipient" class="form-label fw-bold">
+                                    <i class="fas fa-user me-2 text-primary"></i>
+                                    Recipient (Student/Staff)
+                                </label>
+                                <select id="recipient" 
+                                        name="receiver.userId" 
+                                        class="form-select form-select-lg" 
+                                        required>
+                                    <option value="">-- Select Recipient --</option>
+                                    <option th:each="user : ${recipients}"
+                                            th:value="${user.id}"
+                                            th:text="${user.name} + ' (' + ${user.email} + ')'">
+                                        Ashok Tamata (ashok.tamata@student.edu)
+                                    </option>
+                                </select>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Choose the person who will receive this package
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="d-grid gap-3 mt-4">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-save me-2"></i>
+                                    Log Package
+                                </button>
+                                <a href="/dashboard" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Back to Dashboard
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Help Section -->
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-question-circle me-2 text-info"></i>
+                            Need Help?
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-lightbulb me-2 text-warning mt-1"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Package Description</h6>
+                                        <p class="text-muted small mb-0">Include brand, size, or any identifying features</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-user-check me-2 text-success mt-1"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Recipient Selection</h6>
+                                        <p class="text-muted small mb-0">Make sure to select the correct person</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label for="weight" class="form-label">Weight (kg) (Optional)</label>
-            <input type="number" id="weight" name="weight" step="0.01" class="form-control" placeholder="e.g., 2.5">
-        </div>
-
-        <div class="mb-3">
-            <label for="expectedDelivery" class="form-label">Expected Delivery/Pickup Date (Optional)</label>
-            <input type="text" id="expectedDelivery" name="expectedDelivery" class="form-control" placeholder="YYYY-MM-DDT12:00:00 (Optional)">
-        </div>
-
-        <div class="mb-3">
-            <label for="recipient" class="form-label">Recipient (Student/Staff)</label>
-            <select id="recipient" name="receiver.userId" class="form-select" required>
-                <option value="">-- Select Recipient --</option>
-                <option th:each="user : ${recipients}"
-                        th:value="${user.id}"
-                        th:text="${user.name} + ' (' + ${user.email} + ')'">
-                    Ashok Tamata (ashok.tamata@student.edu)
-                </option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-success w-100 mt-3">Log Package</button>
-    </form>
-</main>
+    </div>
+</div>
 
 <div th:insert="~{fragments/_footer :: footer}"></div>
 </body>

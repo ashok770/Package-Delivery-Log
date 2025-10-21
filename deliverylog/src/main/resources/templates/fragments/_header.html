@@ -1,36 +1,69 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark shadow-lg sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
-            <span class="logo-main me-1">PACKAGE</span>
-            <span class="logo-sub">DELIVERY LOG</span>
+            <div class="d-flex align-items-center">
+                <!-- Clean Professional Logo -->
+                <div class="logo-icon-container me-3">
+                    <div class="logo-symbol">
+                        <div class="logo-circle">
+                            <div class="logo-letter">M</div>
+                        </div>
+                        <div class="logo-ring"></div>
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-main">CAMPUS</div>
+                    <div class="logo-sub">MAILROOM</div>
+                </div>
+            </div>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/dashboard"><i class="fas fa-list me-1"></i> Pickups</a>
+                    <a class="nav-link d-flex align-items-center" href="/dashboard">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        <span>Dashboard</span>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/package/new"><i class="fas fa-plus-circle me-1"></i> Log New</a>
+                    <a class="nav-link d-flex align-items-center" href="/package/new">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        <span>Log Package</span>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/search"><i class="fas fa-search me-1"></i> Search</a>
+                    <a class="nav-link d-flex align-items-center" href="/search">
+                        <i class="fas fa-search me-2"></i>
+                        <span>Search</span>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/reports"><i class="fas fa-chart-line me-1"></i> Reports</a>
+                    <a class="nav-link d-flex align-items-center" href="/reports">
+                        <i class="fas fa-chart-line me-2"></i>
+                        <span>Reports</span>
+                    </a>
                 </li>
             </ul>
 
-            <span class="navbar-text text-light border-start ps-3">
-                    <i class="fas fa-user-shield me-2"></i>Staff: Admin
-                </span>
+            <div class="navbar-text text-light border-start ps-3 ms-3">
+                <div class="d-flex align-items-center">
+                    <div class="bg-white bg-opacity-20 rounded-circle p-1 me-2">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold small">Staff Access</div>
+                        <div class="small text-white-50">Admin User</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </nav>
